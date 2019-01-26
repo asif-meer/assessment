@@ -52,6 +52,24 @@ module Api
 			
 		end
 
+		def destroy
+			begin
+			  todo = Todo.find params[:id]
+			rescue ActiveRecord::RecordNotFound => e
+			  todo = nil
+			end
+
+			if todo.nil?
+				render json: {:message => "invalid todo id", :status => "ERROR", :data => todo}, status: :unprocessable_entity
+			else
+				if todo.destroy
+					render json: {:message => "todo deleted sucessfully", :status => "SUCCESS", :data => todo}, status: :ok
+				else
+					render json: {:message => "unable to delete", :status => "ERROR", :data => todo}, status: :unprocessable_entity
+				end				
+			end		
+		end
+
 		private 
 
 		def todo_params
