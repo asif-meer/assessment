@@ -26,8 +26,29 @@ module Api
 			if todo.save
 				render json: {:message => "todo saved sucessfully", :status => "SUCCESS", :data => todo}, status: :ok
 			else
-				render json: {:message => "unable to save", :status => "ERROR", :data => todo}, status: :ok
+				render json: {:message => "unable to save", :status => "ERROR", :data => todo}, status: :unprocessable_entity
 			end
+			
+		end
+
+		def update
+
+			begin
+			  todo = Todo.find params[:id]
+			rescue ActiveRecord::RecordNotFound => e
+			  todo = nil
+			end
+
+			if todo.nil?
+				render json: {:message => "invalid todo id", :status => "ERROR", :data => todo}, status: :unprocessable_entity
+			else
+				if todo.update_attributes(todo_params)
+					render json: {:message => "todo updated sucessfully", :status => "SUCCESS", :data => todo}, status: :ok
+				else
+					render json: {:message => "unable to update", :status => "ERROR", :data => todo}, status: :unprocessable_entity
+				end				
+			end
+
 			
 		end
 
