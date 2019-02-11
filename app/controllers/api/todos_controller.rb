@@ -1,7 +1,16 @@
 module Api
 
 	class TodosController < ApplicationController
+		# respond_to :json
+
 		skip_before_action :verify_authenticity_token
+
+		swagger_controller :todos, 'Todos'
+
+      swagger_api :index do
+        summary 'Returns all tods'
+        notes 'Notes...'
+      end
 
 		def index
 			todos = Todo.all
